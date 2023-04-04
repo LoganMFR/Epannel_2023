@@ -1,0 +1,135 @@
+/* reset des styles par défaut du navigateur */
+*{
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+/* styles pour le header */
+#navBar {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: #2d3e50;
+  color: #fff;
+  height: 80px;
+  position: relative;
+}
+
+#navBar h1 {
+  font-size: 2rem;
+}
+
+#navBar img {
+  max-height: 100%;
+  max-width: 100%;
+  position: absolute;
+  left: 0;
+}
+
+/* styles pour les message-box */
+.messageBox {
+  margin: 2rem auto;
+  max-width: 600px;
+  padding: 1rem;
+  border: 1px solid #ddd;
+  border-radius: 5px;
+}
+
+.messageBox p {
+  font-size: 1.2rem;
+  margin-bottom: 1rem;
+}
+
+.messageBox textarea {
+  display: block;
+  width: 100%;
+  padding: 0.5rem;
+  margin-bottom: 1rem;
+  border: 1px solid #ddd;
+  border-radius: 5px;
+  font-size: 1.2rem;
+}
+
+.messageBox button {
+  background-color: #2d3e50;
+  color: #fff;
+  border: none;
+  padding: 0.5rem 1rem;
+  border-radius: 5px;
+  font-size: 1.2rem;
+  margin-top: 1rem;
+  cursor: pointer;
+  transition: all 0.2s ease-in-out;
+}
+
+#panelPosition button {
+  background-color: #2d3e50;
+  color: #fff;
+  border: none;
+  padding: 0.5rem 1rem;
+  border-radius: 5px;
+  font-size: 1.2rem;
+  margin-right: 1rem;
+  cursor: pointer;
+  transition: all 0.2s ease-in-out;
+}
+
+/* animation au survol */
+#panelPosition button:hover {
+  transform: scale(1.05);
+}
+
+/* animation au clic */
+#panelPosition button:active {
+  transform: scale(0.95);
+}
+
+/* animation au survol */
+.messageBox button:hover {
+  transform: scale(1.05);
+}
+
+/* animation au clic */
+.messageBox button:active {
+  transform: scale(0.95);
+}
+
+/* styles pour les boutons de position */
+#panelPosition {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-top: 2rem;
+}
+
+#panelPposition p {
+  font-size: 1.2rem
+  ;
+  margin-right: 1rem;
+}
+
+#panelPosition form {
+  margin-right: 1rem;
+}
+
+#panelPosition input[type="submit"] {
+  background-color: #2d3e50;
+  color: #fff;
+  border: none;
+  padding: 0.5rem 1rem;
+  border-radius: 5px;
+  font-size: 1.2rem;
+  cursor: pointer;
+  transition: all 0.2s ease-in-out;
+}
+
+/* animation au survol */
+#panelPosition input[type="submit"]:hover {
+  transform: scale(1.05);
+}
+
+/* animation au clic */
+#panelPosition input[type="submit"]:active {
+  transform: scale(0.95);
+}

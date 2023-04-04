@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="fr">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href='CSS/Style.css' rel='stylesheet' type='text/css'>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="Js/script.js"></script>
+    <script src="Js/bpPosi.js"></script>
+    <link rel="icon" type="image/png" href="IMG/logo.png" />
+    <title>E-Panel</title>
+</head>
+
+<body>
+
+  <!--Entête de l'index Avec Logo et titre-->
+  <div id="navBar">
+    <img id="navLogo" src="IMG/logo.png">
+    <h1>E-Panel</h1>
+  </div>
+  <!--Fin entête de l'Index avec logo et titre-->
+
+  <!--Boite d'affichage du message actuel-->
+  <div class="messageBox">
+    <p><strong>Message actuel :</strong> <span id="MessageActuel"></span></p>
+  </div>
+  <!--Fin de la boite d'affichage du message actuel-->
+
+  <!--Boite pour envoie et affichage de nouveau msg-->
+  <div class="messageBox">
+    <p><strong>Nouveau message :</strong></p>
+    <form id="formMessage" method="POST">
+      <textarea name="nouveauMessage" id="nouveauMessage"></textarea><br>
+      <button type="submit" name="action" value="executer">Validation</button> <!--Bouton qui execute script.js -->
+    </form>
+  </div>
+  <!--Fin de la boite pour l'envoie et afichage de nouveau msg-->
+
+  <!--Boutons pour les 8 positions -->
+  <div id="panelPosition">
+    <p><strong>Position du panneau :</strong></p>
+    <form id="formBp" method="post">
+      <input type="hidden" name="action" value="executer">
+      <button type="submit" name="numero" class="bpPosi" value="1">1</button> <!--Execute bpPosi.js qui execute boutonPHP.php-->
+      <button type="submit" name="numero" class="bpPosi" value="2">2</button> <!--Execute bpPosi.js qui execute boutonPHP.php-->
+      <button type="submit" name="numero" class="bpPosi" value="3">3</button> <!--Execute bpPosi.js qui execute boutonPHP.php-->
+      <button type="submit" name="numero" class="bpPosi" value="4">4</button> <!--Execute bpPosi.js qui execute boutonPHP.php-->
+      <button type="submit" name="numero" class="bpPosi" value="5">5</button> <!--Execute bpPosi.js qui execute boutonPHP.php-->
+      <button type="submit" name="numero" class="bpPosi" value="6">6</button> <!--Execute bpPosi.js qui execute boutonPHP.php-->
+      <button type="submit" name="numero" class="bpPosi" value="7">7</button> <!--Execute bpPosi.js qui execute boutonPHP.php-->
+      <button type="submit" name="numero" class="bpPosi" value="8">8</button> <!--Execute bpPosi.js qui execute boutonPHP.php-->
+    </form>
+  </div>
+  <!--Fin div pour les boutons des 8 positions-->
+</body>
+</html>
