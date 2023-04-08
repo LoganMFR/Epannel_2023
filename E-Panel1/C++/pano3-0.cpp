@@ -1,5 +1,5 @@
-/*
- * Test du panneau Mc Crypte-590996 (sous Windows)
+/*  Crée et adapté par Logan MAURIN 
+ *  Code pour le fonctionnement et l'envois de trame d'un PC au panneau CONRAD
  */
 
 #include <stdio.h>
@@ -11,18 +11,20 @@
 
 #define PORT            "COM5" // cf. gestionnaire de périphériques
 
+// Ces constantes définissent les tailles maximales pour la trame de données et pour la réponse
+
 #define LG_MAX_TRAME    128
 #define LG_MAX          16
 #define LG_REPONSE      4 // au minimum 3 caractères pour ACK
 
-// cf. code ascii
 #define NUL             0x00 // caractère NUL (c'est aussi le code du fin de chaîne)
 #define ACK             0x06 // accusé réception positif
 #define NACK            0x15 // accusé réception négatif
 
+// Cette constante détermine le temps d'attente avant la transmission de données.
+
 #define DELAI           1 // en secondes
 
-// Lire: http://ftp.lip6.fr/pub/linux/french/echo-linux/html/ports-series/ports_series.html
 
 HANDLE ouvrirPort(char *nomPort)
 {
@@ -33,9 +35,11 @@ HANDLE ouvrirPort(char *nomPort)
     COMMTIMEOUTS oldTimeouts; // ancien timeout du port série
     char nomPeripherique[LG_MAX] = { PORT };
     
-    // \\.\COM10
+
+     // Construction du nom complet du périphérique avec \\.\ devant le nom du port
     sprintf(nomPeripherique, "\\\\.\\%s", nomPort);
-    // Lire https://msdn.microsoft.com/en-us/library/windows/desktop/aa363858%28v=vs.85%29.aspx
+
+    // Ouverture du port série
     hPort = CreateFile(
                        "\\\\.\\COM5",     
                        GENERIC_READ | GENERIC_WRITE,          
@@ -45,6 +49,7 @@ HANDLE ouvrirPort(char *nomPort)
                        0,                  
                        NULL);
 
+    // Vérification si l'ouverture du port série s'est bien déroulée
     if( hPort == INVALID_HANDLE_VALUE )
     {
         fprintf(stderr, "Erreur d'ouverture du peripherique %s !\n", nomPeripherique);
@@ -72,46 +77,38 @@ HANDLE ouvrirPort(char *nomPort)
       CloseHandle(hPort);
       return hPort;
     }
+    // Configuration de la taille du buffer d'entrée/sortie (2048 octets reception, 1024 octets émission)
     SetupComm(hPort, 2048, 1024);
+    // Sauvegarde des anciens paramètres de timeout
     GetCommTimeouts(hPort, &oldTimeouts);
-    // MODE NON BLOQUANT (timeout)
-    // Specify time-out between charactor for receiving.
-    comout.ReadIntervalTimeout = 100;
-    // Specify value that is multiplied 
-    // by the requested number of bytes to be read. 
-    comout.ReadTotalTimeoutMultiplier = 1;
-    // Specify value is added to the product of the 
-    // ReadTotalTimeoutMultiplier member
-    comout.ReadTotalTimeoutConstant = 0;
-    // Specify value that is multiplied 
-    // by the requested number of bytes to be sent. 
-    //comout.WriteTotalTimeoutMultiplier = 3;
-    // Specify value is added to the product of the 
-    // WriteTotalTimeoutMultiplier member
-    //comout.WriteTotalTimeoutConstant = 2;
-    // set the time-out parameter into device control.
-    SetCommTimeouts(hPort, &comout);
+    // Configuration des nouveaux paramètres de timeout pour le mode non bloquant
+    comout.ReadIntervalTimeout = 100;       // Temps d'attente entre deux caractères de la trame reçue (en ms)
+    comout.ReadTotalTimeoutMultiplier = 1;  // Temps d'attente total (multiplié par le nombre de caractères à lire
+    comout.ReadTotalTimeoutConstant = 0;    // Temps d'attente constant (ajouté au temps total)
+    SetCommTimeouts(hPort, &comout);        // Applique les nouveaux paramètres de timeout au port série
     
-    return hPort;
+    return hPort;   // Renvoie le handle sur le port série
 }
 
 void fermerPort(HANDLE hPort)
 {
-    // Lire https://msdn.microsoft.com/en-us/library/windows/desktop/ms724211%28v=vs.85%29.aspx
+    // Fermeture du handle sur le port série
     CloseHandle(hPort);
 }
 
 BOOL envoyer(HANDLE hPort, char *trame, int nb)
 {
-    BOOL retour = FALSE;
-    DWORD nNumberOfBytesToWrite = nb;
-    DWORD ecrits;
+    BOOL retour = FALSE;                // Variable pour stocker le résultat de l'opération d'écriture
+    DWORD nNumberOfBytesToWrite = nb;   // Nombre d'octets à écrire dans le port série
+    DWORD ecrits;                       // Nombre d'octets réellement écrits dans le port série   
 
+     // Vérifier que le handle du port série est valide
     if(hPort > 0)
     {
-        // Lire https://msdn.microsoft.com/en-us/library/windows/desktop/aa365747%28v=vs.85%29.aspx
+        // Écrire les octets de la trame dans le port série
         retour = WriteFile(hPort, trame, nNumberOfBytesToWrite, &ecrits, NULL);
         
+        // Si le mode de débogage est activé, afficher des informations sur la trame envoyée
         #ifdef DEBUG_PANNEAU        
         //debug : affichage
         fprintf(stderr, "-> envoyer (%d/%d) : ", nb, ecrits);
@@ -124,6 +121,8 @@ BOOL envoyer(HANDLE hPort, char *trame, int nb)
         fprintf(stderr, "\n");*/
         fprintf(stderr, "%s\n", trame);
         #endif
+
+         // Si l'écriture a échoué, afficher un message d'erreur
         if (retour == FALSE)
         {
             fprintf(stderr, "Erreur écriture port !");
@@ -148,37 +147,45 @@ BOOL envoyer(HANDLE hPort, char *trame, int nb)
     return retour;
 }
 
-// Lire https://msdn.microsoft.com/en-us/library/windows/desktop/aa365467%28v=vs.85%29.aspx
+
+// Cette fonction permet de recevoir des données à partir d'un port série et de les stocker dans un tampon de données.
 BOOL recevoir(HANDLE hPort, char *donnees, int nb)
 {
     char donnee;
     int n;
     DWORD lus = 0;
     BOOL retour = FALSE;
-
+    
+    // Vérifie que le port série et le tampon de données sont valides
     if(hPort > 0 && donnees != (char *)NULL)
     {
+        // Vérifie que la taille du tampon de données est supérieure à 0
         if(nb > 0)
         {
+            // Boucle pour recevoir "nb" octets de données
             for(n=0;n<nb;n++)
-            {             
+            {
+                // Lit un octet à partir du port série en utilisant la fonction "ReadFile"             
                 // ATTENTION au mode bloquant !
                 retour = ReadFile(hPort, &donnee, 1, &lus, NULL);
                 if(retour == TRUE)
                 {
+                     // Stocke la donnée lue dans le tampon de données à la position "n"
                     if(donnee != 0)
                     {
                         *(donnees+n) = donnee;
                         fprintf(stderr, "donnee : 0x%02X (%d)\n", *(donnees+n), n); 
                     }
-                    else n--;
+                    else n--; // Si la donnée lue est égale à 0, décrémente "n" pour la supprimer du tampon
                 }
                 else    
                 {
-                    break;
+                    break; // Si la lecture échoue, arrête la boucle
                 }
             }
+             // Ajoute un caractère nul au tampon de données pour indiquer la fin de la chaîne
             *(donnees+n) = 0x00; //fin de chaine
+             // Affiche le contenu du tampon de données en format hexadécimal si la macro DEBUG_PANNEAU est définie
             #ifdef DEBUG_PANNEAU
             int i;
             fprintf(stderr, "<- recevoir (%d/%d) : ", nb, n);
@@ -190,7 +197,7 @@ BOOL recevoir(HANDLE hPort, char *donnees, int nb)
         }
         else
         {
-            
+            // Si la taille du tampon de données est nulle, ne fait rien
         }
     }
     
@@ -199,8 +206,8 @@ BOOL recevoir(HANDLE hPort, char *donnees, int nb)
 
 unsigned char calculerChecksum(char *trame)
 {
-   unsigned char checksum = 0;
-   int i = 0;
+   unsigned char checksum = 0;  // initialisation du checksum à 0
+   int i = 0;                   // initialisation de la variable i à 0
    
    #ifdef DEBUG_PANNEAU
    printf("data packet :\t");
@@ -209,24 +216,24 @@ unsigned char calculerChecksum(char *trame)
    printf("\n");
    #endif
    
-   for(i=0;i<strlen(trame);i++)
-      checksum ^= trame[i];
+   for(i=0;i<strlen(trame);i++) // parcours de la trame
+      checksum ^= trame[i];     // application de l'opérateur XOR au checksum et au caractère courant
 
    #ifdef DEBUG_PANNEAU 
    printf("checksum :\t0x%02X\n", checksum);
    #endif
    
-   return checksum;
+   return checksum; // retourne le checksum calculé
 }
 
-
+// Cette fonction envoie un message via le port série, attend une réponse et la stocke dans une variable
 void envoyerEtRecevoirTrame(char *message, char *nomPort, char *reponse)
 {
-    char trame[LG_MAX_TRAME] = { NUL };
-    char protocole[LG_MAX_TRAME] = "<L1><PA><FE><MA><WC><FE>";
-    unsigned char checksum;    
-    BOOL retour = FALSE;
-    HANDLE hPort = INVALID_HANDLE_VALUE;
+    char trame[LG_MAX_TRAME] = { NUL };                         // Initialise un tableau de caractères pour la trame
+    char protocole[LG_MAX_TRAME] = "<L1><PA><FE><MA><WC><FE>";  // Initialise un en-tête de trame
+    unsigned char checksum;                                     // Initialise une variable pour stocker le checksum calculé 
+    BOOL retour = FALSE;                                        // Initialise une variable booléenne pour vérifier le succès des opérations
+    HANDLE hPort = INVALID_HANDLE_VALUE;                        // Initialise une variable pour stocker le handle du port série
     
     // 0. on ajoute le message dans l'en-tete du protocole
     sprintf(protocole, "%s%s", protocole, message);
@@ -255,7 +262,7 @@ void envoyerEtRecevoirTrame(char *message, char *nomPort, char *reponse)
         // ... ?
     }
  
-    Sleep(DELAI);
+    Sleep(DELAI); // Attend un court instant pour que la réponse puisse arriver
  
     // 3.3 on receptionne l'acquittement
     retour = recevoir(hPort, reponse, LG_REPONSE);
@@ -274,18 +281,21 @@ void envoyerEtRecevoirTrame(char *message, char *nomPort, char *reponse)
 }
 
 int main(int argc, char *argv[])
-{
-    char trame[LG_MAX_TRAME] = { NUL };
-    char protocole[LG_MAX_TRAME] = "<L1><PA><FE><MA><WC><FE>";
-    unsigned char checksum;    
-    BOOL retour = FALSE;
-    HANDLE hPort = INVALID_HANDLE_VALUE;
-    char message[LG_MAX];
-    char nomPort[] = "COM6";
-    char reponse[LG_REPONSE];
+{   
+    char trame[LG_MAX_TRAME] = { NUL };                         // Initialise un tableau de caractères pour la trame
+    char protocole[LG_MAX_TRAME] = "<L1><PA><FE><MA><WC><FE>";  // Initialise un en-tête de trame
+    unsigned char checksum;                                     // Initialise une variable pour stocker le checksum calculé 
+    BOOL retour = FALSE;                                        // Initialise une variable booléenne pour vérifier le succès des opérations
+    HANDLE hPort = INVALID_HANDLE_VALUE;                        // Initialise une variable pour stocker le handle du port série
+    char message[LG_MAX];                                       // Message a envoyer
+    char nomPort[] = "COM6";                                    // Nom du port série à utiliser
+    char reponse[LG_REPONSE];                                   // Réponse reçue du port série
     
+    // Si le nombre d'arguments est égal à 2
     if (argc == 2) {
+        // Copie le deuxième argument dans la variable message
         strcpy(message, argv[1]);
+        // Appel de la fonction envoyerEtRecevoirTrame avec les paramètres message, nomPort et reponse
         envoyerEtRecevoirTrame(message, nomPort, reponse); 
     }
 }
