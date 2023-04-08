@@ -6,7 +6,7 @@ $password = "1234";
 $dbname = "e-panel";
 $conn = mysqli_connect($host, $username, $password, $dbname);
 
-// Vérification connexion
+// Vérification de la connexion
 if (!$conn) {
   die("La connexion a échoué : " . mysqli_connect_error());
 }
@@ -27,24 +27,24 @@ if(isset($_POST['action'])){
             // ID à sélectionner
             $id = 1;
 
-            //SQL pour sélectionner les valeurs correspondant à l'ID
+            // Commande SQL pour sélectionner les valeurs correspondant à l'ID
             $sql = "SELECT * FROM infopanneau WHERE id = $id";
 
-            // Exécution de la requête
+            // Exécution de la commande
             $result = mysqli_query($conn, $sql);
 
-            // Vérif résultats
+            // Vérification des résultats
             if (mysqli_num_rows($result) > 0) {
                 // Parcourir les résultats et afficher les valeurs
                 while($row = mysqli_fetch_assoc($result)) {
                     $valeur_1 = $row["Message"];
                     // etc...
                 }
-                // Exécuter la commande shell ou cmd avec les valeurs récupérées
+                // Exécuter la commande shell/cmd avec les valeurs récupérées
                 if (isset($_POST['action']) && $_POST['action'] == 'executer') {
                     $arg = $valeur_1 ; // Récupération de la valeur
                     echo ''.$arg.''; // Transfert de la valeur à JavaScript
-                    $command = 'cd C:\xampp\htdocs\E-Panel\php && start /B pano3-0.exe "'.$arg.' ->"';
+                    $command = 'cd C:\xampp\htdocs\E-Panel\php && start /B pano3-0.exe "'.$arg.' ->"'; //Commande d'execution 
                     exec($command);
                     // Afficher la valeur de $arg dans la balise HTML avec l'ID MessageActuel
                     
@@ -61,10 +61,10 @@ if(isset($_POST['action'])){
             // ID à sélectionner
             $id = 2;
 
-            // Requête SQL pour sélectionner les valeurs correspondant à l'ID
+            // Commande SQL pour sélectionner les valeurs correspondant à l'ID
             $sql = "SELECT * FROM infopanneau WHERE id = $id";
 
-            // Exécution de la requête
+            // Exécution de la commande
             $result = mysqli_query($conn, $sql);
 
             // Vérification des résultats
@@ -75,11 +75,11 @@ if(isset($_POST['action'])){
         
                     // etc...
                 }
-                // Exécuter la commande shell ou cmd avec les valeurs récupérées
+                // Exécution la commande shell/cmd avec les valeurs récupérées
                 if (isset($_POST['action']) && $_POST['action'] == 'executer') {
                     $arg = $valeur_1; // Récupération de la valeur
                     echo ''.$arg.''; // Transfert de la valeur à JavaScript
-                    $command = 'cd C:\xampp\htdocs\E-Panel\php && start /B pano3-0.exe "'.$arg.' ->"';
+                    $command = 'cd C:\xampp\htdocs\E-Panel\php && start /B pano3-0.exe "'.$arg.' ->"'; //Commande d'execution 
                     exec($command);
                     // Afficher la valeur de $arg dans la balise HTML avec l'ID MessageActuel
                     
@@ -96,10 +96,10 @@ if(isset($_POST['action'])){
             // ID à sélectionner
             $id = 3;
 
-            // Requête SQL pour sélectionner les valeurs correspondant à l'ID
+            // Commande SQL pour sélectionner les valeurs correspondant à l'ID
             $sql = "SELECT * FROM infopanneau WHERE id = $id";
 
-            // Exécution de la requête
+            // Exécution de la Commande
             $result = mysqli_query($conn, $sql);
 
             // Vérification des résultats
@@ -114,7 +114,7 @@ if(isset($_POST['action'])){
                 if (isset($_POST['action']) && $_POST['action'] == 'executer') {
                     $arg = $valeur_1; // Récupération de la valeur
                     echo ''.$arg.''; // Transfert de la valeur à JavaScript
-                    $command = 'cd C:\xampp\htdocs\E-Panel\php && start /B pano3-0.exe "'.$arg.' ->"';
+                    $command = 'cd C:\xampp\htdocs\E-Panel\php && start /B pano3-0.exe "'.$arg.' ->"'; //Commande d'execution
                     exec($command);
                     // Afficher la valeur de $arg dans la balise HTML avec l'ID MessageActuel
                     
@@ -131,10 +131,10 @@ if(isset($_POST['action'])){
             // ID à sélectionner
             $id = 4;
 
-            // Requête SQL pour sélectionner les valeurs correspondant à l'ID
+            // commande SQL pour sélectionner les valeurs correspondant à l'ID
             $sql = "SELECT * FROM infopanneau WHERE id = $id";
 
-            // Exécution de la requête
+            // Exécution de la commande
             $result = mysqli_query($conn, $sql);
 
             // Vérification des résultats
@@ -149,7 +149,7 @@ if(isset($_POST['action'])){
                 if (isset($_POST['action']) && $_POST['action'] == 'executer') {
                     $arg = $valeur_1; // Récupération de la valeur
                     echo ''.$arg.''; // Transfert de la valeur à JavaScript
-                    $command = 'cd C:\xampp\htdocs\E-Panel\php && start /B pano3-0.exe "'.$arg.' ->"';
+                    $command = 'cd C:\xampp\htdocs\E-Panel\php && start /B pano3-0.exe "'.$arg.' ->"'; //Commande d'execution
                     exec($command);
                     // Afficher la valeur de $arg dans la balise HTML avec l'ID MessageActuel
                     
@@ -166,10 +166,10 @@ if(isset($_POST['action'])){
             // ID à sélectionner
             $id = 5;
 
-            // Requête SQL pour sélectionner les valeurs correspondant à l'ID
+            // commande SQL pour sélectionner les valeurs correspondant à l'ID
             $sql = "SELECT * FROM infopanneau WHERE id = $id";
 
-            // Exécution de la requête
+            // Exécution de la commande
             $result = mysqli_query($conn, $sql);
 
             // Vérification des résultats
@@ -184,7 +184,7 @@ if(isset($_POST['action'])){
                 if (isset($_POST['action']) && $_POST['action'] == 'executer') {
                     $arg = $valeur_1; // Récupération de la valeur
                     echo ''.$arg.''; // Transfert de la valeur à JavaScript
-                    $command = 'cd C:\xampp\htdocs\E-Panel\php && start /B pano3-0.exe "'.$arg.' ->"';
+                    $command = 'cd C:\xampp\htdocs\E-Panel\php && start /B pano3-0.exe "'.$arg.' ->"';  //Commande d'execution
                     exec($command);
                     // Afficher la valeur de $arg dans la balise HTML avec l'ID MessageActuel
                     
@@ -201,10 +201,10 @@ if(isset($_POST['action'])){
             // ID à sélectionner
             $id = 6;
 
-            // Requête SQL pour sélectionner les valeurs correspondant à l'ID
+            // commande SQL pour sélectionner les valeurs correspondant à l'ID
             $sql = "SELECT * FROM infopanneau WHERE id = $id";
 
-            // Exécution de la requête
+            // Exécution de la commande
             $result = mysqli_query($conn, $sql);
 
             // Vérification des résultats
@@ -219,7 +219,7 @@ if(isset($_POST['action'])){
                 if (isset($_POST['action']) && $_POST['action'] == 'executer') {
                     $arg = $valeur_1; // Récupération de la valeur
                     echo ''.$arg.''; // Transfert de la valeur à JavaScript
-                    $command = 'cd C:\xampp\htdocs\E-Panel\php && start /B pano3-0.exe "'.$arg.' ->"';
+                    $command = 'cd C:\xampp\htdocs\E-Panel\php && start /B pano3-0.exe "'.$arg.' ->"'; //Commande d'execution
                     exec($command);
                     // Afficher la valeur de $arg dans la balise HTML avec l'ID MessageActuel
                     
@@ -236,10 +236,10 @@ if(isset($_POST['action'])){
             // ID à sélectionner
             $id = 7;
 
-            // Requête SQL pour sélectionner les valeurs correspondant à l'ID
+            // commande SQL pour sélectionner les valeurs correspondant à l'ID
             $sql = "SELECT * FROM infopanneau WHERE id = $id";
 
-            // Exécution de la requête
+            // Exécution de la commande
             $result = mysqli_query($conn, $sql);
 
             // Vérification des résultats
@@ -254,7 +254,7 @@ if(isset($_POST['action'])){
                 if (isset($_POST['action']) && $_POST['action'] == 'executer') {
                     $arg = $valeur_1; // Récupération de la valeur
                     echo ''.$arg.''; // Transfert de la valeur à JavaScript
-                    $command = 'cd C:\xampp\htdocs\E-Panel\php && start /B pano3-0.exe "'.$arg.' ->"';
+                    $command = 'cd C:\xampp\htdocs\E-Panel\php && start /B pano3-0.exe "'.$arg.' ->"'; //Commande d'execution
                     exec($command);
                     // Afficher la valeur de $arg dans la balise HTML avec l'ID MessageActuel
                     
@@ -271,10 +271,10 @@ if(isset($_POST['action'])){
             // ID à sélectionner
             $id = 8;
 
-            // Requête SQL pour sélectionner les valeurs correspondant à l'ID
+            // commande SQL pour sélectionner les valeurs correspondant à l'ID
             $sql = "SELECT * FROM infopanneau WHERE id = $id";
 
-            // Exécution de la requête
+            // Exécution de la commande
             $result = mysqli_query($conn, $sql);
 
             // Vérification des résultats
@@ -289,7 +289,7 @@ if(isset($_POST['action'])){
                 if (isset($_POST['action']) && $_POST['action'] == 'executer') {
                     $arg = $valeur_1; // Récupération de la valeur
                     echo ''.$arg.''; // Transfert de la valeur à JavaScript
-                    $command = 'cd C:\xampp\htdocs\E-Panel\php && start /B pano3-0.exe "'.$arg.' ->"';
+                    $command = 'cd C:\xampp\htdocs\E-Panel\php && start /B pano3-0.exe "'.$arg.' ->"'; //Commande d'execution
                     exec($command);
                     // Afficher la valeur de $arg dans la balise HTML avec l'ID MessageActuel
                     
