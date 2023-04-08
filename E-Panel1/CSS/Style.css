@@ -1,3 +1,11 @@
+/*
+Nom du fichier : Style.css
+Auteur : HNIZDO Thomas
+Description : Ce fichier contient les styles CSS pour la mise en forme de la page index.html.
+Date de création : 07/03/2023
+Dernière modification : 08/04/2023
+*/
+
 /* reset des styles par défaut du navigateur */
 *{
   box-sizing: border-box;
