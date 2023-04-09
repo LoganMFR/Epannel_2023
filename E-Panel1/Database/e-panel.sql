@@ -1,3 +1,5 @@
+-- Code exporter de la BDD PHPmyAdmin
+
 -- phpMyAdmin SQL Dump
 -- version 5.2.0
 -- https://www.phpmyadmin.net/
